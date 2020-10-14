@@ -10,7 +10,23 @@
     - name: Download Jboss from jboss.org
       get_url: 
         url=http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip dest=/opt/jboss-as-7.1.1.Final.zip
-    - name: Extract jboss into /var/lib/foo
+    - name: Extract jboss
       unarchive:
         src: /opt/jboss-as-7.1.1.Final.zip
         dest: /opt
+    - name: Create jboss
+      user:
+        name: jboss
+        generate_ssh_key: yes
+        ssh_key_bits: 2048
+        ssh_key_file: .ssh/id_rsa
+        #python -c 'import crypt; print crypt.crypt("passw0rd", "$1$SomeSalt$")'
+        password: "$1$SomeSalt$DwC1GiArkVWOcRatwuG8O."
+        update_password: always
+    - name: Create symbolic link
+      file:
+        src: "/opt/jboss-as-7.1.1.Final"
+        dest: "/opt/jboss"
+        owner: jboss
+        group: jboss
+        state: link
