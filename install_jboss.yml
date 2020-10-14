@@ -1,0 +1,16 @@
+- hosts: local
+  tasks:
+    #- name: startowanie bazy
+    #  shell: systemctl start mariadb
+    - name: Install Java 1.8 and some basic dependencies
+      yum: name={{item}} state=present
+      with_items:
+       - unzip
+       - java-1.8.0-openjdk
+    - name: Download Jboss from jboss.org
+      get_url: 
+        url=http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip dest=/opt/jboss-as-7.1.1.Final.zip
+    - name: Extract jboss into /var/lib/foo
+      unarchive:
+        src: /opt/jboss-as-7.1.1.Final.zip
+        dest: /opt
