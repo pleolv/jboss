@@ -51,7 +51,14 @@
       become: yes
       command: "/opt/jboss/bin/add-user.sh -s -r ManagementRealm -u jboss -p passw0rd"
     - meta: flush_handlers
-    - name: Run jboss
-      become: true
-      become_user: jboss
-      command: /opt/jboss/bin/standalone.sh -Djboss.bind.address=0.0.0.0 -Djboss.bind.address.management=0.0.0.0
+    - name: add jboss to systemd
+      copy:
+    	src: jboss-as-standalone.service
+    	dest: /etc/systemd/system/
+    	owner: jboss
+    	group: jboss
+    	mode: 0644
+    - name: start jboss
+      systemd:
+    	state: started
+    	name: jboss-as-standalone

@@ -1,0 +1,13 @@
+[unit]
+Description= Jboss Application server control script
+After = network.target
+
+[Service]
+Type=idle
+ExecStart=/opt/jboss/bin/standalone.sh -b=0.0.0.0 -bmanagement=0.0.0.0
+ExecStop=/opt/jboss/bin/jboss-cli.sh -connect command=:shutdown
+TimeoutStartSec=400
+TimeoutStopSec=400
+
+[install]
+WantedBy=multi-user.target
