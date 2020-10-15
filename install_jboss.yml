@@ -53,12 +53,12 @@
     - meta: flush_handlers
     - name: add jboss to systemd
       copy:
-    	src: jboss-as-standalone.service
-    	dest: /etc/systemd/system/
-    	owner: jboss
-    	group: jboss
-    	mode: 0644
+        src: jboss-as-standalone.service
+        dest: /etc/systemd/system/
+        owner: jboss
+        group: jboss
+        mode: 0644
     - name: start jboss
       systemd:
-    	state: started
-    	name: jboss-as-standalone
+        state: started
+        name: jboss-as-standalone
