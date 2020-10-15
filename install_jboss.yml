@@ -7,9 +7,10 @@
       with_items:
        - unzip
        - java-1.8.0-openjdk
-    - name: Download Jboss from jboss.org
+    - name: Download Jboss from nexus
       get_url: 
-        url=http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip dest=/opt/jboss-as-7.1.1.Final.zip
+        #url=http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip dest=/opt/jboss-as-7.1.1.Final.zip
+        url=http://127.0.0.1:8081/repository/wlp-auth-wlpfo-nexus-release/net/atos/wlp/jboss/wlp-jboss/7.2.0/wlp-jboss-7.2.0.zip dest=/opt/jboss-eap-7.2.0.zip
     - name: Create jboss
       user:
         name: jboss
@@ -21,14 +22,35 @@
         update_password: always
     - name: Extract jboss
       unarchive:
-        src: /opt/jboss-as-7.1.1.Final.zip
+        src: /opt/jboss-eap-7.2.0.zip
         dest: /opt
         owner: jboss
         group: jboss
     - name: Create symbolic link
       file:
-        src: "/opt/jboss-as-7.1.1.Final"
+        src: "/opt/jboss-eap-7.2"
         dest: "/opt/jboss"
         owner: jboss
         group: jboss
         state: link
+    - name: export bridged ip address in .bashrc
+      blockinfile:
+        dest: '/home/jboss/.bashrc'
+        block: |
+         #export JAVA_HOME=/usr/java/jdk-12.0.2/
+         #export PATH=$PATH:$JAVA_HOME/bin
+        marker: '# {mark} ANSIBLE MANAGED BLOCK - export Java'
+        owner: 'jboss'
+        group: 'jboss'
+        create: yes
+    #- name: Source .bashrc
+    #  action: shell source /home/jboss/.bashrc
+    - name: Create default JBoss admin user
+      become_user: jboss
+      become: yes
+      command: "/opt/jboss/bin/add-user.sh -s -r ManagementRealm -u jboss -p passw0rd"
+    - meta: flush_handlers
+    - name: Run jboss
+      become: true
+      become_user: jboss
+      command: /opt/jboss/bin/standalone.sh -Djboss.bind.address=0.0.0.0 -Djboss.bind.address.management=0.0.0.0
