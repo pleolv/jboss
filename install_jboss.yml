@@ -20,6 +20,8 @@
         #python -c 'import crypt; print crypt.crypt("passw0rd", "$1$SomeSalt$")'
         password: "$1$SomeSalt$DwC1GiArkVWOcRatwuG8O."
         update_password: always
+        become: true
+        become_user: root
     - name: Extract jboss
       unarchive:
         src: /opt/jboss-eap-7.2.0.zip
