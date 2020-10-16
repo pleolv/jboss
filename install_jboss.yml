@@ -62,7 +62,7 @@
       systemd:
         state: started
         name: jboss-as-standalone
-    - jboss:
-    src: jboss-helloworld-rs-7.1.0-SNAPSHOT.war
-    deployment: hello.war
-    state: present
+    #- jboss:
+    #src: jboss-helloworld-rs-7.1.0-SNAPSHOT.war
+    #deployment: hello.war
+    #state: present
